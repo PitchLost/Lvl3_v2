@@ -1,0 +1,20 @@
+#dropdown_menu { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15em;
+    height: fit-content;
+    min-height: 3em;
+    max-height: fit-content;
+    background-color: white;
+    overflow-y: auto;
+    flex-direction: column;
+}
+#dropdown_menu p:hover { 
+    color: red;
+}
+
+.dropdownCTRL { 
+    font-weight: bold;
+    color: blue;
+}

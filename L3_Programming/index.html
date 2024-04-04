@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development Window</title>
+    <!-- CDNS: -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://kit.fontawesome.com/e68c61fca7.js" crossorigin="anonymous"></script>
+    <!-- Back/Middle -->
+    <script defer src="/L3_Programming/L3_server/node_requests/nodeReq.js"></script>
+
+    <!-- Front End Scripts  -->
+    <script defer src="/L3_Programming/L3_core/client/App.js"></script>
+    <script defer src="/L3_Programming/L3_core/client/core.js"></script>
+    <!-- Navigation:  -->
+    <script defer src="/L3_Programming/L3_front/front_navigation/client/navigation.js"></script>
+ 
+    
+
+    <!-- Styles:  -->
+    <!-- Main Styles: -->
+    <link rel="stylesheet" href="/L3_Programming/L3_core/css/core.css">
+
+    <!-- L3_devtools -->
+    <link rel="stylesheet" href="/L3_Programming/L3_devtools/add_item/css/add_item.css">
+    <!-- L3_compact styles -->
+    <link rel="stylesheet" href="/L3_Programming/L3_compact/dropdown/css/dropdown.css">
+    <link rel="stylesheet" href="/L3_Programming/L3_compact/window/css/window.css">
+    
+    <!-- Front styles -->
+
+        <!-- items -->
+            <link rel="stylesheet" href="/L3_Programming/L3_front/front_items/css/items.css">
+        <!-- login -->
+            <link rel="stylesheet" href="/L3_Programming/L3_front/front_login/css/login.css">
+        <!-- navigation -->
+            <link rel="stylesheet" href="/L3_Programming/L3_front/front_navigation/css/navigation.css">
+
+        <!-- Cart -->
+            <link rel="stylesheet" href="/L3_Programming/L3_cart/css/cart.css">
+        <!-- Checkout -->
+            <link rel="stylesheet" href="/L3_Programming/L3_checkout/css/checkout.css">
+</head>
+<body>
+
+<div id="LoadingScreen"> 
+    <p>The page is loading...</p>
+</div>
+
+    <div id="app">
+    <div v-show="developer_mode" id="add_new"> 
+        <form @submit.prevent="add_new(new_item.new_name, new_item.new_price, new_item.new_img)" id="add_new_form"> 
+            <input v-model="new_item.new_name" id="new_name" placeholder="Item Name" autocomplete="off">
+            <input v-model="new_item.new_price" id="new_price" placeholder="Item Price" autocomplete="off">
+            <input v-model="new_item.new_img" id="new_img" placeholder="Item Img src" autocomplete="off">
+            <button>Add New</button>
+        </form>
+    </div>
+
+    <!-- Navigation -->
+
+    <nav> 
+        <ul id="top_nav"> 
+            <div id="left_seg"> 
+                <li @click="toggleCompact"><a><i class="fa-solid fa-square-caret-down"></i></a></li>
+                <button @click="toggle_cart_window"><i class="fa-solid fa-cart-shopping"></i></button>
+            </div>
+            <div id="center_seg"> 
+                <header>Tech Port</header>
+            </div>
+            <div id="right_seg"> 
+                <li><a href="discord.com"><i class="fa-brands fa-discord"></i></a></li>
+                <li><a href="twitter.com"><i class="fa-brands fa-twitter"></i></a></li>
+                <li><a href="insta.com"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="tiktok.com"><i class="fa-brands fa-tiktok"></i></a></li>
+                <button @click="toggleDevMode">
+                    <span v-if="developer_mode"><i class="fa-solid fa-toggle-off"></i></span>
+                    <span v-if="!developer_mode"><i class="fa-solid fa-toggle-on"></i></span>
+                </button>
+            </div>
+        </ul>
+    </nav>
+
+    
+
+
+
+
+     <!-- Search Bar -->
+     <div id="search_bar"> 
+        <input id="search_input" type="text" placeholder="Search"> 
+        
+     </div>
+    
+     <!-- Flex Item display -->
+    <div id="flex_items"> 
+        <div class="shop_item" v-for="item in shop_items"> 
+            <strong>{{ item.ITEM_NAME }}</strong> <!--Item Title-->
+            <p>${{item.ITEM_PRICE }}</p> <!--Item Price-->
+            <img :src="item.img_source"> <!-- Item image source-->
+            
+            <div class="desc_div"> 
+                <p class="item_desc">{{ item.item_desc }}</p>
+                <button @click="cart_add(item.ITEM_NAME, item.ITEM_PRICE)" class="cart_btn">Add To Cart</button>
+            </div>
+            
+        </div>
+    </div>
+<div v-show="compactOpen" id="compact_mode"> 
+     <button @click="toggleCompact" id="closeCompact"><i class="fa-regular fa-circle-xmark"></i></button>
+    <div id="compact_window"> 
+            <div @click="toggleDropdown" id="dropdown_menu">
+                <p class="dropdownCTRL" v-show="!dropdownOpen">Item Dropdown<i class="fa-solid fa-angle-down"></i></p>
+                <div v-if="dropdownOpen" id="dropdownItems">
+                <p v-for="dropdownItem in dropdownItems" @click="cart_add(dropdownItem.ITEM_NAME, dropdownItem.ITEM_PRICE)">{{ dropdownItem.ITEM_NAME }} </p>
+                </div>
+                <p class="dropdownCTRL" v-show="dropdownOpen">Close Dropdown<i class="fa-solid fa-angle-up"></i></p>
+        </div> 
+    </div>
+</div>
+
+<!-- Cart: -->
+
+<div v-show="cart_open" id="cart_window"> 
+    <div v-show="cart_open" @click="" id="cart_sub_window">
+        <button id="close_cart" @click="toggle_cart_window"><i class="fa-regular fa-circle-xmark"></i> </button>
+     <section id="cart_text">
+        <header id="cart_head">Your Shopping Cart</header>
+        <header id="cart_total_p">Total Price: ${{ cart_total }}</header>
+    </section>
+    <section id="items_section">
+    <div class="cart_display" v-for="cart_item in cart_items"> 
+        <p> {{ cart_item.cart_name }}</p>
+        <p> {{ cart_item.cart_new_price }}</p>
+        <input value="1" type="number" v-model="cart_item.cart_qty" placeholder="1" @input="updateQty(cart_item)">
+        </div>
+    </section>
+    <section id="cart_checkout">
+        <button @click="toggle_checkout" id="checkout_btn">Checkout</button>
+    </section>
+    </div>
+</div>
+
+<!-- Checkout -->
+<div v-show="checkout_open" id="checkout_window"> 
+    <button @click="toggle_checkout" id="close_checkout">X</button>
+    <div v-show="checkout_open" id="checkout_sub_windw"> 
+        <section id="checkout_section1"> 
+            <header id="checkout_head" style="font-size: 6mm;">Checkout {{item_counter}} Items</header>
+            <div id="checkout_price"> 
+                <p id="check_price">You have {{item_counter}} Items in your cart, This totals to ${{cart_total}}</p>
+            </div>
+        </section>
+        <!-- Obviously this is template only -->
+        <section id="perso_info"> 
+            <form @submit.prevent="submit_checkout" id="checkout_form"> 
+                <input v-model="PaymentInfo.CardName" type="text" id="checkout_name" placeholder="Your full name">
+                <input type="email" id="checkout_email" placeholder="Email Address"> 
+                <input v-model="PaymentInfo.CardNum" type="text" id="card_number" placeholder="1234 5678 9101 2345"> 
+                <input v-model="PaymentInfo.CardCvc" type="text" id="cvc" placeholder="123">
+                <input v-model="PaymentInfo.CardExpiry"  type="date" id="cart_data" placeholder="03/24">
+                <button type="submit">Place Order</button>
+            </form>
+        </section>
+        <section id="checkout_text"> 
+
+        </section>
+        
+    </div>
+</div>
+
+
+
+   
+    </div>
+</body>
+</html>
