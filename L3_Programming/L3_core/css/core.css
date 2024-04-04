@@ -37,6 +37,7 @@ body {
     max-width: fit-content;
     flex-wrap: wrap;
     flex-direction: column;
+    background-color: beige;
 }
 .shop_item { 
     width: auto;
@@ -62,17 +63,20 @@ body {
     width: auto;
     justify-content: center;
     height: 20vh;
-    margin-right: 1em;
+    margin-left: 2pc;
     padding-bottom: 15vh;
     padding-top: 0vh;
     align-items: center;
+    
 }
 .item_desc { 
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     text-align: center;
-    width: 80vw;
+    width: 100vw;
+    height: 40vh;
+    background-color: orange;
 }
 .desc_div { 
     width: 78vw;
@@ -83,7 +87,7 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     border-color: white;
-    background-color: transparent;
+    background-color: white ;
     border-left-style:solid ;
     border-left-color:black ;
     border-left-width: thin;
@@ -92,7 +96,7 @@ body {
     position: absolute;
     bottom: 2vh;
     left: -17vw;
-    width: 16vw;
+    width: 15vw;
     height: 4vh;
     color: red;
     background-color: lightgray;
