@@ -77,6 +77,8 @@ body {
     width: 100vw;
     height: 40vh;
     background-color: orange;
+    font-size: 6mm;
+    color: white;
 }
 .desc_div { 
     width: 78vw;

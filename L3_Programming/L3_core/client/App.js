@@ -76,8 +76,7 @@ const app = Vue.createApp({
         vue_onload() { 
             console.log('vue onload function') // log the script
             this.dropdownItems = this.dropdownItems.sort((a,b) => a.ITEM_NAME.localeCompare(b.ITEM_NAME)) // Sort all of the items alphabetically
-            //! DO NOT EDIT THIS AT ALL ^^^
-            //! Everything will break
+      
             
         },
 
@@ -120,6 +119,12 @@ const app = Vue.createApp({
         //* Cart Functions: 
         cart_add(name, price) { 
 
+            if (this.item_counter > 4) {  
+                alert('The cart is full')
+                return
+            } else { 
+                console.log('Amount of items in cart =',this.item_counter)
+
 
             // Edit the cartClass and prepare it for the push into the array
             this.CartClass = { 
@@ -135,12 +140,12 @@ const app = Vue.createApp({
 
             // Add the item to the cart items array: 
             this.cart_items.push(this.CartClass) // Push the new item into the main cart array
-      
-
+    
             // Increment the cart Price: 
             this.cart_total += price
             
             
+        }
         }, 
         removeFromCart(cart_item) { 
             let index = this.cart_items.indexOf(cart_item); // this index points to the item we want to remove
@@ -167,7 +172,9 @@ const app = Vue.createApp({
             let time = new Date() //** purely for logging purposes
             this.cart_open = !this.cart_open // toggle the cart_open var. If its false than vue will not show the cart
             console.log('Toggle cart', this.cart_open, time) // Log
+            
         },
+        
 
         //* Checkout Functions: 
 
@@ -192,11 +199,11 @@ const app = Vue.createApp({
                 alert('The Card Number is wrong! Please Try again')
                 return
         }   
-            if (this.PaymentInfo.CardCvc.length > 3 || this.PaymentInfo.CardCvc.length < 3) {  // If the cvc is to long/short
+            if (this.PaymentInfo.CardCvc.length > 3 || this.PaymentInfo.CardCvc.length < 4) {  // If the cvc is to long/short
                 alert('The CVC is wrong! Please Try again')
                 return
             }
-        alert('Checking Card info...')
+       let feedback = prompt('')
     }, 
 
     //* On mount functions: 

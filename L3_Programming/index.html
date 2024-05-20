@@ -95,10 +95,9 @@
             <strong>{{ item.ITEM_NAME }}</strong> <!--Item Title-->
             <p>${{item.ITEM_PRICE }}</p> <!--Item Price-->
             <img :src="item.img_source"> <!-- Item image source-->
-            
             <div class="desc_div"> 
                 <p class="item_desc">{{ item.item_desc }}</p>
-                <button @click="cart_add(item.ITEM_NAME, item.ITEM_PRICE)" class="cart_btn">Add To Cart</button>
+            <button @click="cart_add(item.ITEM_NAME, item.ITEM_PRICE)" class="cart_btn">Add To Cart</button>
             </div>
             
         </div>

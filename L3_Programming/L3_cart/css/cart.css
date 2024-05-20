@@ -121,6 +121,6 @@
     background-color: transparent;
 }
 #close_cart:hover { 
-    background-color: red;
+    color: red;
     color: white;
 }

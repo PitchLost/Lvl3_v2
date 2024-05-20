@@ -31,6 +31,6 @@
     top: 10vh;
     background-color: transparent;
 } #closeCompact:hover { 
-    background-color: red;
+    color: red;
     color: white;
 }
