@@ -75,8 +75,9 @@ const app = Vue.createApp({
         // On page load function:
         vue_onload() { 
             console.log('vue onload function') // log the script
+            console.log('Shop items:',this.shop_items, 'db_items', this.db_items)
             this.dropdownItems = this.dropdownItems.sort((a,b) => a.ITEM_NAME.localeCompare(b.ITEM_NAME)) // Sort all of the items alphabetically
-      
+          
             
         },
 
