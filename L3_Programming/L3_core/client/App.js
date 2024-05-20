@@ -195,15 +195,17 @@ const app = Vue.createApp({
             let time = new Date() // Logging Purpose
             console.log('Checkout Submitted', this.PaymentInfo, 'Items Checked Out:',this.cart_items, time ) // Log the checkout
             // Check if the data entered in the checkout is correct: 
-            if (this.PaymentInfo.CardNum.length > 19 || this.PaymentInfo.CardNum.length < 19) { // If the card number is to long/short
-                alert('The Card Number is wrong! Please Try again')
-                return
+            if (this.PaymentInfo.CardNum.length == 19) { // If the card number is to long/short
+                console.log('Card number correct')
         }   
-            if (this.PaymentInfo.CardCvc.length > 3 || this.PaymentInfo.CardCvc.length < 4) {  // If the cvc is to long/short
-                alert('The CVC is wrong! Please Try again')
+            if (this.PaymentInfo.CardCvc.length == 3) {  // If the cvc is to long/short
+                console.log('CVC good!')
+            }
+            else { 
+                alert('One of the inputs is wrong!')
                 return
             }
-       let feedback = prompt('')
+            alert('The order has been placed! Click and collect from wherever')
     }, 
 
     //* On mount functions: 
