@@ -55,11 +55,11 @@
     <div id="app">
 
 <!-- Add item to DOM tool. This will take the inputs and insert into the database -->
-    <div v-show="developer_mode" id="add_new"> 
-        <form @submit.prevent="add_new(new_item.new_name, new_item.new_price, new_item.new_img)" id="add_new_form"> 
-            <input v-model="new_item.new_name" id="new_name" placeholder="Item Name" autocomplete="off">
-            <input v-model="new_item.new_price" id="new_price" placeholder="Item Price" autocomplete="off">
-            <input v-model="new_item.new_img" id="new_img" placeholder="Item Img src" autocomplete="off">
+    <div v-show="devMode" id="addNew"> 
+        <form @submit.prevent="addNew(newItem.newName, newItem.newPrice, newItem.newImage)" id="addNew_form"> 
+            <input v-model="newItem.newName" id="newName" placeholder="Item Name" autocomplete="off">
+            <input v-model="newItem.newPrice" id="newPrice" placeholder="Item Price" autocomplete="off">
+            <input v-model="newItem.newImage" id="newImage" placeholder="Item Img src" autocomplete="off">
             <button>Add New</button>
         </form>
     </div>
@@ -70,7 +70,7 @@
         <ul id="top_nav"> 
             <div id="left_seg"> <!--Left Segment-->
                 <li @click="toggleCompact"><a><i class="fa-solid fa-square-caret-down"></i></a></li> <!--Toggle compact mode buttons-->
-                <button @click="toggle_cart_window"><i class="fa-solid fa-cart-shopping"></i></button> <!--Toggle the cart window buttons-->
+                <button @click="toggleCart"><i class="fa-solid fa-cart-shopping"></i></button> <!--Toggle the cart window buttons-->
             </div>
             <div id="center_seg"> <!--Center segment-->
                 <header>Tech Port (LOCAL)</header> <!--Main header for page-->
@@ -81,8 +81,8 @@
                 <li><a href="insta.com"><i class="fa-brands fa-instagram"></i></a></li>
                 <li><a href="tiktok.com"><i class="fa-brands fa-tiktok"></i></a></li>
                 <button @click="toggleDevMode"> <!-- Toggle the developer tools on/off-->
-                    <span v-if="developer_mode"><i class="fa-solid fa-toggle-off"></i></span>
-                    <span v-if="!developer_mode"><i class="fa-solid fa-toggle-on"></i></span>
+                    <span v-if="devMode"><i class="fa-solid fa-toggle-off"></i></span>
+                    <span v-if="!devMode"><i class="fa-solid fa-toggle-on"></i></span>
                 </button>
             </div>
         </ul>
@@ -92,13 +92,13 @@
     <div id="flex_items"> 
         <!--Here we will use a vue.js for loop (v-for='') to render each item that we recieve from the database. This loop will iterate through
         each item in that array and render the following DOM elements for them:-->
-        <div class="shop_item" v-for="item in shop_items"> 
+        <div class="shop_item" v-for="item in shopItems"> 
             <strong>{{ item.ITEM_NAME }}</strong> <!--Item Title-->
             <p>${{item.ITEM_PRICE }}</p> <!--Item Price-->
             <img :src="item.img_source"> <!-- Item image source-->
             <div class="desc_div"> 
                 <p class="item_desc">{{ item.item_desc }}</p> <!-- Item description-->
-            <button @click="cart_add(item.ITEM_NAME, item.ITEM_PRICE)" class="cart_btn">Add To Cart</button> <!-- Add to cart button for each item-->
+            <button @click="cartAdd(item.ITEM_NAME, item.ITEM_PRICE)" class="cart_btn">Add To Cart</button> <!-- Add to cart button for each item-->
             </div>
             
         </div>
@@ -115,7 +115,7 @@
                 <p class="dropdownCTRL" v-show="!dropdownOpen">Item Dropdown<i class="fa-solid fa-angle-down"></i></p> <!--Text inside the dropdown menu-->
                 <div v-if="dropdownOpen" id="dropdownItems"> <!--Show the following if the dropdown menu is open-->
                 <!-- Iterate through each item in the dropdownItems array  -->
-                <p v-for="dropdownItem in dropdownItems" @click="cart_add(dropdownItem.ITEM_NAME, dropdownItem.ITEM_PRICE)">{{ dropdownItem.ITEM_NAME }} </p>
+                <p v-for="dropdownItem in dropdownItems" @click="cartAdd(dropdownItem.ITEM_NAME, dropdownItem.ITEM_PRICE)">{{ dropdownItem.ITEM_NAME }} </p>
                 </div>
                 <!-- Close dropdown button -->
                 <p class="dropdownCTRL" v-show="dropdownOpen">Close Dropdown<i class="fa-solid fa-angle-up"></i></p>
@@ -125,45 +125,45 @@
 
 <!-- Cart: -->
 
-<!-- Show the following if cart_open = true -->
-<div v-show="cart_open" id="cart_window"> 
-    <div v-show="cart_open" @click="" id="cart_sub_window"> <!--CSS was being mean so we have to have sub windows for some reason idek tbh-->
-        <button id="close_cart" @click="toggle_cart_window"><i class="fa-regular fa-circle-xmark"></i> </button> <!-- Close the cart button-->
+<!-- Show the following if cartOpen = true -->
+<div v-show="cartOpen" id="cart_window"> 
+    <div v-show="cartOpen" @click="" id="cart_sub_window"> <!--CSS was being mean so we have to have sub windows for some reason idek tbh-->
+        <button id="close_cart" @click="toggleCart"><i class="fa-regular fa-circle-xmark"></i> </button> <!-- Close the cart button-->
         <!-- Render the items in the cart -->
      <section id="cart_text">
         <header id="cart_head">Your Shopping Cart</header> 
-        <header id="cart_total_p">Total Price: ${{ cart_total }}</header> <!--cart_total is calculated in App.js-->
+        <header id="cartTotal_p">Total Price: ${{ cartTotal }}</header> <!--cartTotal is calculated in App.js-->
     </section>
     <section id="items_section">
-        <!-- Display each item from the cart_items array -->
-    <div class="cart_display" v-for="cart_item in cart_items"> 
-        <p> {{ cart_item.cart_name }}</p>
-        <p> {{ cart_item.cart_new_price }}</p>
+        <!-- Display each item from the cartItems array -->
+    <div class="cart_display" v-for="cart_item in cartItems"> 
+        <p> {{ cart_item.cartName }}</p>
+        <p> {{ cart_item.cart_newPrice }}</p>
         <!-- Use a input to change the quantity of a cart item. This took like 3 hours to function and its still laggy as ever -->
-        <input value="1" type="number" v-model="cart_item.cart_qty" placeholder="1" @input="updateQty(cart_item)"> 
+        <input value="1" type="number" v-model="cart_item.cartQty" placeholder="1" @input="updateQty(cart_item)"> 
         </div>
     </section>
     <!-- Navigate to checkout from cart: -->
     <section id="cart_checkout">
-        <button @click="toggle_checkout" id="checkout_btn">Checkout</button>
+        <button @click="toggleCheckout" id="checkout_btn">Checkout</button>
     </section>
     </div>
 </div>
 
 <!-- Checkout -->
-<!-- Show the following if checkout_open = true -->
-<div v-show="checkout_open" id="checkout_window"> 
-    <button @click="toggle_checkout" id="close_checkout">X</button>
-    <div v-show="checkout_open" id="checkout_sub_windw"> 
+<!-- Show the following if checkoutOpen = true -->
+<div v-show="checkoutOpen" id="checkout_window"> 
+    <button @click="toggleCheckout" id="close_checkout">X</button>
+    <div v-show="checkoutOpen" id="checkout_sub_windw"> 
         <section id="checkout_section1"> 
-            <header id="checkout_head" style="font-size: 6mm;">Checkout {{item_counter}} Items</header> <!--Display how many items are in the cart-->
+            <header id="checkout_head" style="font-size: 6mm;">Checkout {{cartCounter}} Items</header> <!--Display how many items are in the cart-->
             <div id="checkout_price"> 
-                <p id="check_price">You have {{item_counter}} Items in your cart, This totals to ${{cart_total}}</p> <!--Display the total price aswell as the counter of items-->
+                <p id="check_price">You have {{cartCounter}} Items in your cart, This totals to ${{cartTotal}}</p> <!--Display the total price aswell as the counter of items-->
             </div>
         </section>
         <!-- Obviously we don't actually grab information from here as that would be ILLEGAL-->
         <section id="perso_info"> 
-            <form @submit.prevent="submit_checkout" id="checkout_form"> 
+            <form @submit.prevent="confirmCheckout" id="checkout_form"> 
                 <input v-model="PaymentInfo.CardName" type="text" id="checkout_name" placeholder="Your full name">
                 <input type="email" id="checkout_email" placeholder="Email Address"> 
                 <input v-model="PaymentInfo.CardNum" type="text" id="card_number" placeholder="1234 5678 9101 2345"> 

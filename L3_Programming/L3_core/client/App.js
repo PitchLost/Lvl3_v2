@@ -6,27 +6,27 @@ const app = Vue.createApp({
 
         //* General Data:
           // Check for admin/developer mode
-          developer_mode: false, // False by defualt
-          admin_mode: false, // False by default
+          devMode: false, // False by defualt
+          adminMode: false, // False by default
 
         //* Add New Item data:
             // New Item Add objects: 
-            new_items: [ // This does something
-                {new_name: 'Test Item', new_price: 10, new_src: 'imgurlink.com'},
+            newItems: [ // This does something
+                {newName: 'Test Item', newPrice: 10, newSrc: 'imgurlink.com'},
             ],
-            new_item: { // Used in the add_item process
-                new_name: '',
-                new_price: '',
-                new_img: ''
+            newItem: { // Used in the add_item process
+                newName: '',
+                newPrice: '',
+                newImage: ''
             }, 
 
             //* Database Items:
-            shop_items: db_items, // array for the flex display
+            shopItems: db_items, // array for the flex display
 
             //* Dropdown menu data:
 
             // Get the database items: 
-            dropdownItems: db_items,
+            dropdownItems: db_items, // db_items is like this because its supposed to look different from the client variables
 
             dropdownOpen: false, 
 
@@ -40,24 +40,24 @@ const app = Vue.createApp({
             //* Cart Data: 
 
             
-            cart_open: false, // is cart open?
+            cartOpen: false, // is cart open?
 
-            cart_total: 0, // Running total of the cart
+            cartTotal: 0, // Running total of the cart
 
           
-            cart_items: [], // Main cart array (all new items pushed into here)
+            cartItems: [], // Main cart array (all new items pushed into here)
 
             // Item being added to the cart
             CartClass: { 
-                cart_name: '', // Name of the item
-                cart_qty: 1, // qty of item
-                cart_price: 0 // original price of item
+                cartName: '', // Name of the item
+                cartQty: 1, // qty of item
+                cartPrice: 0 // original price of item
             }, 
-            item_counter: 0, // track how many items are in cart
+            cartCounter: 0, // track how many items are in cart
 
             //* Checkout Data: 
 
-            checkout_open: false,  // is checkout open?
+            checkoutOpen: false,  // is checkout open?
 
             PaymentInfo: { 
                 CardNum: '',  // card number
@@ -75,7 +75,7 @@ const app = Vue.createApp({
         // On page load function:
         vue_onload() { 
             console.log('vue onload function') // log the script
-            console.log('Shop items:',this.shop_items, 'db_items', this.db_items)
+            console.log('Shop items:',this.shopItems, 'db_items', this.db_items)
             this.dropdownItems = this.dropdownItems.sort((a,b) => a.ITEM_NAME.localeCompare(b.ITEM_NAME)) // Sort all of the items alphabetically
           
             
@@ -83,22 +83,22 @@ const app = Vue.createApp({
 
         //* Dev mode functions:
        
-        add_new(name, price, img_src) { // add new items to database/DOM
+        addNew(name, price, img_src) { // add new items to database/DOM
             console.log(name, price, img_src) // Log
-            new_item = { // Set the values of new_item to the newly obtained data
-                new_name: name, 
-                new_price: price, 
-                new_img: img_src
+            newItem = { // Set the values of newItem to the newly obtained data
+                newName: name, 
+                newPrice: price, 
+                newImage: img_src
             }
-            console.log(new_item) // Log
-            this.new_items.push(new_item) // add to new_items array
-            db_add(new_item) // Add the new items to the database using the nodeReq function
+            console.log(newItem) // Log
+            this.newItems.push(newItem) // add to newItems array
+            db_add(newItem) // Add the new items to the database using the nodeReq function
         }, 
 
         // Toggle the developer mode
         toggleDevMode() { 
-            this.developer_mode = !this.developer_mode // Toggle
-            console.log('Dev Mode:', this.developer_mode) // Log
+            this.devMode = !this.devMode // Toggle
+            console.log('Dev Mode:', this.devMode) // Log
         }, 
 
         
@@ -118,61 +118,61 @@ const app = Vue.createApp({
 
 
         //* Cart Functions: 
-        cart_add(name, price) { 
+        cartAdd(name, price) { 
 
-            if (this.item_counter > 4) {  
+            if (this.cartCounter > 4) {  
                 alert('The cart is full')
                 return
             } else { 
-                console.log('Amount of items in cart =',this.item_counter)
+                console.log('Amount of items in cart =',this.cartCounter)
 
 
             // Edit the cartClass and prepare it for the push into the array
             this.CartClass = { 
-                cart_name: name, // Name
-                cart_qty: 1, // qty of item
-                cart_price: price * this.CartClass.cart_qty, // Doing this supports having qty of item
-                cart_new_price: price * this.CartClass.cart_qty // reset the price otherwise it will wig out if we try to increase the qty in the future
+                cartName: name, // Name
+                cartQty: 1, // qty of item
+                cartPrice: price * this.CartClass.cartQty, // Doing this supports having qty of item
+                cart_newPrice: price * this.CartClass.cartQty // reset the price otherwise it will wig out if we try to increase the qty in the future
             } 
             // Alert the user about their item. In a larger project we would make our own message box instead of this
-            console.log(this.CartClass.cart_price)
-            alert('You haved added 1x' + ' ' + this.CartClass.cart_name + ' ' + 'priced at' + ' ' + '$' + this.CartClass.cart_price + ' ' + 'to your cart')
-            this.item_counter++; // Increment the item counter 
+            console.log(this.CartClass.cartPrice)
+            alert('You haved added 1x' + ' ' + this.CartClass.cartName + ' ' + 'priced at' + ' ' + '$' + this.CartClass.cartPrice + ' ' + 'to your cart')
+            this.cartCounter++; // Increment the item counter 
 
             // Add the item to the cart items array: 
-            this.cart_items.push(this.CartClass) // Push the new item into the main cart array
+            this.cartItems.push(this.CartClass) // Push the new item into the main cart array
     
             // Increment the cart Price: 
-            this.cart_total += price
+            this.cartTotal += price
             
             
         }
         }, 
         removeFromCart(cart_item) { 
-            let index = this.cart_items.indexOf(cart_item); // this index points to the item we want to remove
-            this.cart_items.splice(index, 1); // Remove 1 item starting from index
-            this.cart_total -= cart_item.cart_price; // Subtract removed item's price from total
+            let index = this.cartItems.indexOf(cart_item); // this index points to the item we want to remove
+            this.cartItems.splice(index, 1); // Remove 1 item starting from index
+            this.cartTotal -= cart_item.cartPrice; // Subtract removed item's price from total
             console.log('Removed the following item from cart:', cart_item); //* Log
         },
         
 
         updateQty(cart_item) { 
-            console.log('Cart price =',cart_item.cart_price)
-            cart_item.cart_new_price = cart_item.cart_price * cart_item.cart_qty // Multiply the item price with the qty
+            console.log('Cart price =',cart_item.cartPrice)
+            cart_item.cart_newPrice = cart_item.cartPrice * cart_item.cartQty // Multiply the item price with the qty
 
-            if (cart_item.cart_qty == 0 ) { // Check if the item qty is 0 If so then remove from cart
+            if (cart_item.cartQty == 0 ) { // Check if the item qty is 0 If so then remove from cart
                 this.removeFromCart(cart_item) // Call the remove from cart function passing the element we want to remove with the function
                 console.log('Passing',cart_item, 'To the remove array')
                 return 
             }
-            this.cart_total = this.cart_items.reduce((total, item) => total + item.cart_new_price, 0);
-            console.log('The updated price = ', this.CartClass.cart_price, this.CartClass.cart_new_price, this.CartClass.cart_qty) //* Log
+            this.cartTotal = this.cartItems.reduce((total, item) => total + item.cart_newPrice, 0);
+            console.log('The updated price = ', this.CartClass.cartPrice, this.CartClass.cart_newPrice, this.CartClass.cartQty) //* Log
         },
         // Toggle visibillity of the cart window
-        toggle_cart_window() { 
+        toggleCart() { 
             let time = new Date() //** purely for logging purposes
-            this.cart_open = !this.cart_open // toggle the cart_open var. If its false than vue will not show the cart
-            console.log('Toggle cart', this.cart_open, time) // Log
+            this.cartOpen = !this.cartOpen // toggle the cartOpen var. If its false than vue will not show the cart
+            console.log('Toggle cart', this.cartOpen, time) // Log
             
         },
         
@@ -180,13 +180,13 @@ const app = Vue.createApp({
         //* Checkout Functions: 
 
 
-        toggle_checkout() { 
+        toggleCheckout() { 
             let time = new Date() // Logging Purposes
             console.log('Opening Checkout', time) // Log the time of the checkout open
-            this.checkout_open = !this.checkout_open // Toggle the checkout variable
+            this.checkoutOpen = !this.checkoutOpen // Toggle the checkout variable
         },
         
-        submit_checkout() { 
+        confirmCheckout() { 
             /* 
             Normally here we would make a server request for the checkout and then verify on the server side instead 
             of directly in the client. BUT we do not have a database setup for this and it would be quite complex to 
@@ -194,7 +194,7 @@ const app = Vue.createApp({
             */
 
             let time = new Date() // Logging Purpose
-            console.log('Checkout Submitted', this.PaymentInfo, 'Items Checked Out:',this.cart_items, time ) // Log the checkout
+            console.log('Checkout Submitted', this.PaymentInfo, 'Items Checked Out:',this.cartItems, time ) // Log the checkout
             // Check if the data entered in the checkout is correct: 
             if (this.PaymentInfo.CardNum.length == 19) { // If the card number is to long/short
                 console.log('Card number correct')

@@ -37,7 +37,7 @@ body {
     max-width: fit-content;
     flex-wrap: wrap;
     flex-direction: column;
-    background-color: beige;
+    background-color: transparent;
 }
 .shop_item { 
     width: auto;
@@ -76,7 +76,7 @@ body {
     text-align: center;
     width: 100vw;
     height: 40vh;
-    background-color: orange;
+    background-color: transparent;
     font-size: 6mm;
     color: white;
 }

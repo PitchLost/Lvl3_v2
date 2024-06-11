@@ -1,4 +1,4 @@
-#add_new { 
+#addNew { 
     position: fixed;
     top: 10%;
     left: 33%;
@@ -6,7 +6,7 @@
     background-color: blue;
     z-index: 1000;
 }
-#add_new input { 
+#addNew input { 
     background-color: red;
     color: white;
     height: 3em;
